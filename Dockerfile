@@ -63,15 +63,15 @@ RUN apt-get install -y xfce4-whiskermenu-plugin xfce4-clipman-plugin xfce4-linel
 RUN apt-get install -y sudo
 
 ## some X libs for clients, f.e. allowing videos in Xephyr
-#RUN apt-get install -y --no-install-recommends x11-utils
+RUN apt-get install -y --no-install-recommends x11-utils
 
 ## OpenGl support in dependencies
-#RUN apt-get install -y mesa-utils mesa-utils-extra
+RUN apt-get install -y mesa-utils mesa-utils-extra
 
 ## Pulseaudio support
-#RUN apt-get install -y --no-install-recommends pulseaudio
+RUN apt-get install -y --no-install-recommends pulseaudio
 
-
+RUN apt-get install -y module-init-tools
 
 # clean cache to make image a bit smaller
 RUN apt-get clean
@@ -88,6 +88,11 @@ RUN echo '<?xml version="1.0" encoding="UTF-8"?>                     \
 ' > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
 
 RUN cp -R /etc/skel/. /root/
+
+# install nvidia-driver
+ADD nvidia-driver.run /tmp/nvidia-driver.run
+RUN sh /tmp/nvidia-driver.run -a -N --ui=none --no-kernel-module
+RUN rm /tmp/nvidia-driver.run
 
 # create startscript 
 RUN echo '#! /bin/bash\n\
